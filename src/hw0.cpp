@@ -66,8 +66,6 @@ void execute(char x[], vector<string> &parsed)
 		argv[parsed.size()] = NULL;
 		
 
-		cout << argv[0] << endl;
-		cout << argv[1] << endl;
 
 		int r = execvp(argv[0], argv);
 
