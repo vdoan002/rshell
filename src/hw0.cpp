@@ -27,14 +27,10 @@ using namespace std;
 
 void execute(char x[], vector<string> &parsed)
 {
-	int amp = 0;
-	int bar = 0;
-	int semi= 0;
 
 
 	
 
-	char* compare;
 
 	string temp = x;
 
@@ -98,14 +94,12 @@ int main()
 	UserName = getlogin();
         gethostname(HostName,1024);
 
-	pid_t childpid;
 
 	string command;
 	char* commandstr = new char[command.size()];
 
 	strcpy(commandstr, command.c_str());
 
-	int commandsize = command.size();
 	
 	while(true){	
 		cout << UserName << "@" << HostName << " $ ";
@@ -123,8 +117,7 @@ int main()
 			command = command.substr(0, command.find('#'));
 		}
 
-		int argvlength = 0;
-		int i = 0;
+		unsigned i = 0;
 	
 		char **argv = new char*[command.size()];
 

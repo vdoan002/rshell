@@ -1,0 +1,80 @@
+Script started on Tue 21 Oct 2014 11:38:01 PM PDT
+~
+vdoan002@hammer $ cd CS100/RS[K[Krshell/src
+~/CS100/rshell/src
+vdoan002@hammer $ g++ -Wall -Werror _[K-pedantic[K[K[K[K[K[K[K[Kansi -p[e[K[Kedantic hw0.cpp
+~/CS100/rshell/src
+vdoan002@hammer $ ./a.out
+vdoan002@hammer.cs.ucr.edu $ ls
+a.out  hw0.cpp
+vdoan002@hammer.cs.ucr.edu $ ls-  -a
+.  ..  a.out  hw0.cpp  .hw0.cpp.swp  .rshell.cpp.swp
+vdoan002@hammer.cs.ucr.edu $ ls -a -a -a
+.  ..  a.out  hw0.cpp  .hw0.cpp.swp  .rshell.cpp.swp
+vdoan002@hammer.cs.ucr.edu $ ls -a l -l
+total 64
+drwx------ 2 vdoan002 csmajs  4096 Oct 21 23:38 .
+drwx------ 5 vdoan002 csmajs  4096 Oct 21 23:17 ..
+-rwx------ 1 vdoan002 csmajs 24851 Oct 21 23:38 a.out
+-rw------- 1 vdoan002 csmajs  2047 Oct 21 23:37 hw0.cpp
+-rw------- 1 vdoan002 csmajs 12288 Oct 21 23:37 .hw0.cpp.swp
+-rw------- 1 vdoan002 csmajs 12288 Oct 21 23:14 .rshell.cpp.swp
+vdoan002@hammer.cs.ucr.edu $ ls -l
+total 32
+-rwx------ 1 vdoan002 csmajs 24851 Oct 21 23:38 a.out
+-rw------- 1 vdoan002 csmajs  2047 Oct 21 23:37 hw0.cpp
+vdoan002@hammer.cs.ucr.edu $ pwd
+/home/csmajs/vdoan002/CS100/rshell/src
+vdoan002@hammer.cs.ucr.edu $ pwd -a
+pwd: invalid option -- 'a'
+Try `pwd --help' for more information.
+vdoan002@hammer.cs.ucr.edu $ pwd     echo hello
+hello
+vdoan002@hammer.cs.ucr.edu $ echo "hello"
+"hello"
+vdoan002@hammer.cs.ucr.edu $ echo .hello
+.hello
+vdoan002@hammer.cs.ucr.edu $ echo -a hello
+-hello
+vdoan002@hammer.cs.ucr.edu $ echo #hello
+
+vdoan002@hammer.cs.ucr.edu $ ls -a #hell    testing comment
+.  ..  a.out  hw0.cpp  .hw0.cpp.swp  .rshell.cpp.swp
+vdoan002@hammer.cs.ucr.edu $ mkdir
+mkdir: missing operand
+Try `mkdir --help' for more information.
+vdoan002@hammer.cs.ucr.edu $ mkdir test
+vdoan002@hammer.cs.ucr.edu $ mkdir big tes   fi      lots of folders so we can see how many
+vdoan002@hammer.cs.ucr.edu $ p ls
+a.out  can  folders  how  hw0.cpp  lots  many  of  see	so  test  we
+vdoan002@hammer.cs.ucr.edu $ rm -rf can folders how lots many of see so test we
+vdoan002@hammer.cs.ucr.edu $ ls
+a.out  hw0.cpp
+vdoan002@hammer.cs.ucr.edu $ ls || ls
+ls: cannot access ||: No such file or directory
+ls: cannot access ls: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ ls && ls
+ls: cannot access &&: No such file or directory
+ls: cannot access ls: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ ls ; ls
+ls: cannot access ;: No such file or directory
+ls: cannot access ls: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ ls || ls || ls || ls || ls || ls
+ls: cannot access ||: No such file or directory
+ls: cannot access ls: No such file or directory
+ls: cannot access ||: No such file or directory
+ls: cannot access ls: No such file or directory
+ls: cannot access ||: No such file or directory
+ls: cannot access ls: No such file or directory
+ls: cannot access ||: No such file or directory
+ls: cannot access ls: No such file or directory
+ls: cannot access ||: No such file or directory
+ls: cannot access ls: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ ls ls ls sl sl               -a -a-  -a -a -a -a -a -a -a -a -a -a -a -a -a -a
+.  ..  a.out  hw0.cpp  .hw0.cpp.swp  .rshell.cpp.swp
+vdoan002@hammer.cs.ucr.edu $ exu it
+~/CS100/rshell/src
+vdoan002@hammer $ exit
+exit
+
+Script done on Tue 21 Oct 2014 11:40:18 PM PDT
