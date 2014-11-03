@@ -2,6 +2,14 @@
 #include <fstream>
 #include "Time.h"
 #include <cstring>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <errno.h>
+#include <cstdlib>
+
 
 using namespace std;
 
@@ -11,7 +19,7 @@ int main(int argc, char*argv[])
 		cout << "Error: Too few arguements\n";
 		return 1;
 	}
-
+	
 	string flag;
 	if(argc == 4)
 	{
@@ -58,6 +66,48 @@ int main(int argc, char*argv[])
 		t.elapsedSystemTime(eTime);
 		cout << "System Time: " << eTime << endl;
 	}
+	/*----------------------------------------------------------------------*/
+
+	string input = argv[1];
+	string output = argv[2];
 	
+	int inFile = open(input.c_str(), O_RDONLY);
+	int exists = access(output.c_str(), F_OK);
+	if(inFile == -1)
+	{
+		perror("There was an error with open(). ");
+		exit(1);
+	}
+	if(exists == 0)
+	{
+		cerr << "Error:" <<  output << " already exists.\n";
+		return 1;
+	}
+	int outFile = open(output.c_str(), O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	if(outFile == -1)
+	{	
+		perror("There was an error with open(). ");
+		exit(1);
+	}
+
+	char buf[BUFSIZ];
+	int n;
+	int p;
+
+	while((n = read(inFile, buf, BUFSIZ)) > 0)
+	{
+		if(n == -1)
+		{	
+			perror("There was an error with read(). ");
+			exit(1);
+		}	
+		p = write(outFile, buf, n);
+		if(p == -1)
+		{
+			perror("There was an error with write(). ");
+			exit(1);
+		}
+	}
+
 	return 0;
 }
