@@ -109,5 +109,64 @@ int main(int argc, char*argv[])
 		}
 	}
 
+	/***********************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+using namespace std;
+
+int main(int argc, char * argv[]){
+
+        if(argc < 3){
+                cout << "** ERROR check inputs arguments ***" << endl;
+        }
+        else{
+                int fdi = open(argv[1],O_RDONLY);
+                int fdo = open(argv[2],O_WRONLY | O_CREAT,S_IRWXU);
+
+                if(fdi == -1 || fdo == -1){
+                        perror("open");
+                }
+
+                void* buf;
+
+                while(int readNum = read(fdi,buf,1) > 0){
+                        int writeChk = write(fdo,buf,1);
+
+                        if(readNum == -1){
+                                perror("read");
+                        }
+
+                        if(writeChk == -1){
+                                perror("write");
+                        }
+                }
+        }
+
+        return 0;
+}
+
+
+
+
+
+
 	return 0;
 }
