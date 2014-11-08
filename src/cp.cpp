@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "Time.h"
+#include "Timer.h"
 #include <cstring>
 #include <unistd.h>
 #include <fcntl.h>
@@ -13,28 +13,13 @@
 
 using namespace std;
 
-int main(int argc, char*argv[])
-{
-	if(argc < 3){
-		cout << "Error: Too few arguements\n";
-		return 1;
-	}
-	
-	string flag;
-	if(argc == 4)
-	{
-		flag = argv[3];
-	}
-	
-	Timer t;
-	double eTime;
-	t.start();
-	
+void Vincent(int argc, char* argv[]){
+
 	ifstream check(argv[2]);
 	if(check)
 	{
 		cout << "File \"" << argv[2] << "\" already exists.\n";
-		return 0;
+		exit(0);	
 	}
 
 	ifstream infile(argv[1]);
@@ -42,12 +27,12 @@ int main(int argc, char*argv[])
 	if(!infile.is_open())
 	{
 		cerr << "File \"" << argv[1] << "\" could not be open\n";
-		return 1;
+		exit(0);
 	}
 	if(!outfile.is_open())
 	{
 		cerr << "File \"" << argv[2] << "\" could not be open\n";
-		return 1;
+		exit(0);
 	}	
 
 
@@ -55,18 +40,11 @@ int main(int argc, char*argv[])
 
 	outfile.close();
 	infile.close();
-	if(flag == "-t")
-	{
-		t.elapsedWallclockTime(eTime);
-		cout << "Wallclock Time: " << eTime << endl;
-		
-		t.elapsedUserTime(eTime);
-		cout << "User Time: " << eTime << endl;
 
-		t.elapsedSystemTime(eTime);
-		cout << "System Time: " << eTime << endl;
-	}
-	/*----------------------------------------------------------------------*/
+	return;
+}
+
+void atte(int argc, char*argv[]){
 
 	string input = argv[1];
 	string output = argv[2];
@@ -81,7 +59,7 @@ int main(int argc, char*argv[])
 	if(exists == 0)
 	{
 		cerr << "Error:" <<  output << " already exists.\n";
-		return 1;
+		exit(1);
 	}
 	int outFile = open(output.c_str(), O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 	if(outFile == -1)
@@ -108,42 +86,17 @@ int main(int argc, char*argv[])
 			exit(1);
 		}
 	}
+	return;	
+}
 
-	/***********************************************************************/
+void other(int argc, char*argv[]){
 
+       int fdi = open(argv[1],O_RDONLY);
+       int fdo = open(argv[2],O_WRONLY | O_CREAT,S_IRWXU);
 
-
-
-
-
-
-
-
-
-
-
-
-#include <iostream>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
-
-using namespace std;
-
-int main(int argc, char * argv[]){
-
-        if(argc < 3){
-                cout << "** ERROR check inputs arguments ***" << endl;
-        }
-        else{
-                int fdi = open(argv[1],O_RDONLY);
-                int fdo = open(argv[2],O_WRONLY | O_CREAT,S_IRWXU);
-
-                if(fdi == -1 || fdo == -1){
-                        perror("open");
-                }
+       if(fdi == -1 || fdo == -1){
+                perror("open");
+       }
 
                 void* buf;
 
@@ -158,15 +111,40 @@ int main(int argc, char * argv[]){
                                 perror("write");
                         }
                 }
-        }
-
-        return 0;
+	return ;
 }
 
+int main(int argc, char*argv[])
+{
+	if(argc < 3){
+		cout << "Error: Too few arguements\n";
+		return 1;
+	}
+	
+	string flag;
+	if(argc == 4)
+	{
+		flag = argv[3];
+	}
+	else{
+		atte(argc, argv);
+		return 0;
+	}
+	
+	Timer t;
+	double eTime;
+	t.start();
+	
+	if(flag == "-t")
+	{
+		t.elapsedWallclockTime(eTime);
+		cout << "Wallclock Time: " << eTime << endl;
+		
+		t.elapsedUserTime(eTime);
+		cout << "User Time: " << eTime << endl;
 
-
-
-
-
+		t.elapsedSystemTime(eTime);
+		cout << "System Time: " << eTime << endl;
+	}
 	return 0;
 }
