@@ -329,12 +329,12 @@ int main(int argc, char *argv[])
                 }
                 else if(argv[i][k] == 'l')
                 {
-                    FLAG_l = 1;
+                    FLAG_l = 2;
 		//	flags |= FLAG_l
                 }
                 else if(argv[i][k] == 'R')
                 {
-                    FLAG_R = 1;
+                    FLAG_R = 3;
 			//flags |= FLAG_R
                 }
                 else
@@ -401,7 +401,7 @@ int main(int argc, char *argv[])
          }
     }
     
-    if(FLAG_l && FLAG_a + FLAG_R == 0)
+    if(FLAG_l == 2 && FLAG_a + FLAG_R == 0)
     {
          if(files.size() == 0)
          {
@@ -418,7 +418,7 @@ int main(int argc, char *argv[])
              }
          }
     }
-    if(FLAG_R)
+    if(FLAG_R == 3)
     {
          if(files.size() == 0)
          {
@@ -435,10 +435,11 @@ int main(int argc, char *argv[])
              }
          }
     }
-    if(FLAG_l + FLAG_R == 2 && !FLAG_a) //ls -l -r
+    if(FLAG_l + FLAG_R == 5 && !FLAG_a) //ls -l -r
     {
 	FLAG_l = 1;
-	FLAG_a = 0;	
+	FLAG_a = 0;
+	FLAG_R = 3;
         if(files.size() == 0)
          {
             string begin= ".";
