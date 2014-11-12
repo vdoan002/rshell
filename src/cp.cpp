@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void Vincent(int argc, char* argv[]){
+void method1(int argc, char* argv[]){
 
 	ifstream check(argv[2]);
 	if(check)
@@ -44,7 +44,7 @@ void Vincent(int argc, char* argv[]){
 	return;
 }
 
-void atte(int argc, char*argv[]){
+void method3(int argc, char*argv[]){
 
 	string input = argv[1];
 	string output = argv[2];
@@ -89,7 +89,7 @@ void atte(int argc, char*argv[]){
 	return;	
 }
 
-void other(int argc, char*argv[]){
+void method2(int argc, char*argv[]){
 
        int fdi = open(argv[1],O_RDONLY);
        int fdo = open(argv[2],O_WRONLY | O_CREAT,S_IRWXU);
@@ -126,10 +126,6 @@ int main(int argc, char*argv[])
 	{
 		flag = argv[3];
 	}
-	else{
-		atte(argc, argv);
-		return 0;
-	}
 	
 	Timer t;
 	double eTime;
@@ -137,6 +133,7 @@ int main(int argc, char*argv[])
 	
 	if(flag == "-t")
 	{
+		method1(argc,argv);
 		t.elapsedWallclockTime(eTime);
 		cout << "Wallclock Time: " << eTime << endl;
 		
@@ -145,6 +142,39 @@ int main(int argc, char*argv[])
 
 		t.elapsedSystemTime(eTime);
 		cout << "System Time: " << eTime << endl;
+		
+		Timer t2;
+		double eTime2;
+		t2.start();
+
+		method2(argc,argv);
+		t.elapsedWallclockTime(eTime2);
+		cout << "Wallclock Time: " << eTime2 << endl;
+		
+		t.elapsedUserTime(eTime2);
+		cout << "User Time: " << eTime2 << endl;
+
+		t.elapsedSystemTime(eTime2);
+		cout << "System Time: " << eTime2 << endl;
+
+		Timer t3;
+		double eTime3;
+		t3.start();
+
+		method3(argc,argv);
+		t3.elapsedWallclockTime(eTime3);
+		cout << "Wallclock Time: " << eTime3 << endl;
+		
+		t.elapsedUserTime(eTime3);
+		cout << "User Time: " << eTime3 << endl;
+
+		t.elapsedSystemTime(eTime);
+		cout << "System Time: " << eTime3 << endl;
+		
+	}
+	else{
+		method3(argc,argv);
+		return 0;
 	}
 	return 0;
 }
