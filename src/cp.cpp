@@ -98,7 +98,7 @@ void method2(int argc, char*argv[]){
                 perror("open");
        }
 
-                void* buf;
+                char buf[BUFSIZ];
 
                 while(int readNum = read(fdi,buf,1) > 0){
                         int writeChk = write(fdo,buf,1);
@@ -131,7 +131,7 @@ int main(int argc, char*argv[])
 	double eTime;
 	t.start();
 	
-	if(flag == "-t")
+	if(flag[0] == '-')
 	{
 		string input;
 		cout << "Warning, this program will remove the file provided in argv[2]" << endl
