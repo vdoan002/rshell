@@ -98,7 +98,7 @@ void method2(int argc, char*argv[]){
                 perror("open");
        }
 
-                void* buf;
+                char buf[BUFSIZ];
 
                 while(int readNum = read(fdi,buf,1) > 0){
                         int writeChk = write(fdo,buf,1);
