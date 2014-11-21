@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void redirection(vector<string> cmd, vector<int> location, char** argv)
+void redirection(vector<string> cmd, vector<int> location, char** argv, int argv_size)
 {
 	int pid = fork();
 	
@@ -31,11 +31,11 @@ void redirection(vector<string> cmd, vector<int> location, char** argv)
 				perror("failed to open");
 				exit(1);
 			}
-			if(close(0)){
+			if(close(0) == -1){
 				perror("failed to close");
 				exit(1);
 			}
-			if(dup(fd0)){
+			if(dup(fd0) == -1){
 				perror("failed to dup");
 				exit(1);
 			}
@@ -45,17 +45,31 @@ void redirection(vector<string> cmd, vector<int> location, char** argv)
 		else if(cmd.at(location.at(i)) == ">"){
 			const char* temp = cmd.at(location.at(i) + 1).c_str();
 			int fd = open(temp, O_RDWR | O_CREAT);
-			close(1);
-			dup(fd);
+			if(fd == -1){
+				perror("failed to open");
+				exit(1);
+			}
+			int close1 = close(1);
+			if(close1 == -1){
+				perror("failed to close");
+				exit(1);
+			}
+			int dup1 = dup(fd);
+			if(dup1 == -1){
+				perror("failed to dup");
+				exit(1);
+			}
 		}
 
-		char** argv_temp;
-
-	
-		execvp(argv[0], argv);
+	//	for(unsigned int i = 0; i < location.size(); ++i){
+	//		argv[location.at(i) + 1] = NULL;
+	//	}
+		int r = execvp(argv[0], argv);
+		if(r == -1){
 		perror("execvp error");
 		exit(1);
 		}
+	}
 	}
 		
 	else{
@@ -64,26 +78,50 @@ void redirection(vector<string> cmd, vector<int> location, char** argv)
 	
 }	
 
-void pipe(){
+void pipe(vector<string> cmd, vector<int> location, char** argv, int argv_size){
 	int pfds[2];
 	pipe(pfds);
 	if (!fork()) {
-		close(1);       /* close normal stdout */
-    		dup(pfds[1]);   /* make stdout same as pfds[1] */
-    		close(pfds[0]); /* we don't need this */
-    		execlp("ls", "ls", NULL);
+		if(close(1)==-1){
+			perror("failed to close");
+			exit(1);
+		}
+    		if(dup(pfds[1]) == -1){
+			perror("failed to dup");
+			exit(1);
+		}
+    		if(close(pfds[0]) == -1){
+			perror("failed to dup");
+			exit(1);
+		} 
+    		if(execvp(argv[0], argv) == -1){
+			perror("failed to execvp");
+			exit(1);
+		}
 	} 
 	else {
-    		close(0);       /* close normal stdin */
-    		dup(pfds[0]);   /* make stdin same as pfds[0] */
-    		close(pfds[1]); /* we don't need this */
-    		execlp("grep", "SOMETHING", NULL);
+		if(close(0)==-1){
+			perror("failed to close");
+			exit(1);
+		}
+    		if(dup(pfds[0]) == -1){
+			perror("failed to dup");
+			exit(1);
+		}
+    		if(close(pfds[1]) == -1){
+			perror("failed to dup");
+			exit(1);
+		} 
+    		if(execvp(argv[0], argv) == -1){
+			perror("failed to execvp");
+			exit(1);
+		}
+
 	}
 }
 
 void execute(char x[], vector<string> &parsed)
 {
-	
 	vector<unsigned int> redirec_location;
 	string temp = x;
 
@@ -95,9 +133,9 @@ void execute(char x[], vector<string> &parsed)
 
 	if(childpid == 0){
 		vector<int> redirec_location;
+		vector<int> pipe_location;
 
-
-		int argv_size = 0
+		int argv_size = 0;
 		char** argv = new char*[parsed.size()];
 	//fills argv with correct sizes	
 		for(unsigned int i = 0; i < parsed.size(); ++i)
@@ -105,9 +143,9 @@ void execute(char x[], vector<string> &parsed)
 			argv[i] = new char[parsed.at(i).size()];
 		}
 
+
 		for(unsigned int i = 0; i < parsed.size(); ++i)
 		{
-			cout << "Parsed.at: " << i << " " << parsed.at(i) << endl;
 			if(parsed.at(i) == ">" || parsed.at(i) == "<"){
 				redirec_location.push_back(i);
 				parsed.erase(parsed.begin() + (i));
@@ -115,17 +153,27 @@ void execute(char x[], vector<string> &parsed)
 				
 			}
 
+			else if(parsed.at(i) == "|"){
+				pipe_location.push_back(i);
+				parsed.erase(parsed.begin() + (i));
+				--i;
+			}
+
 			else{
-			++argv;
+			argv_size++;
 			strcpy(argv[i], parsed.at(i).c_str());
 			}
 		}
-
+	
 		argv[parsed.size()] = NULL;
 		
 		if(redirec_location.size() !=  0)
-		{	
-			redirection(parsed,redirec_location,argv);
+		{
+			redirection(parsed,redirec_location,argv, argv_size);
+		}
+		else if(pipe_location.size() != 0)
+		{
+			pipe(parsed, pipe_location, argv, argv_size);
 		}
 		else{
 		int r = execvp(argv[0], argv);
@@ -208,12 +256,12 @@ int main()
 			p = strtok(NULL," ");
 		}
 
-		for(unsigned i = 0; i < parsed.size(); ++i)
+	/*	for(unsigned i = 0; i < parsed.size(); ++i)
 		{
 			if(parsed.at(i) == "exit") exit(0);
 			cerr << parsed.at(i) << endl; 
 		}
-		
+	*/	
 			execute(commandstr, parsed);
 	}
 	return 0;

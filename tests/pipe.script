@@ -1,0 +1,52 @@
+Script started on Thu 20 Nov 2014 11:31:22 PM PST
+~
+vdoan002@hammer $ cd rshe[K[K[K[Krshell/[K
+~/rshell
+vdoan002@hammer $ make
+if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+g++ -Wall -Werror -ansi -pedantic src/hw0.cpp -o bin/rshell
+g++ -Wall -Werror -ansi -pedantic src/ls.cpp -o bin/ls
+g++ -Wall -Werror -ansi -pedantic src/cp.cpp -o bin/cp
+~/rshell
+vdoan002@hammer $ bin/rshell
+vdoan002@hammer.cs.ucr.edu $ cat test
+cat: test: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ ls
+bin  LICENSE  Makefile	README.md  src	tests
+vdoan002@hammer.cs.ucr.edu $ cd src
+Error: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ touch cat
+vdoan002@hammer.cs.ucr.edu $ echo hello . > cat
+hello cat
+vdoan002@hammer.cs.ucr.edu $ cat < a cat
+vdoan002@hammer.cs.ucr.edu $ ls
+bin  cat  LICENSE  Makefile  README.md	src  tests
+vdoan002@hammer.cs.ucr.edu $ ls
+bin  cat  LICENSE  Makefile  README.md	src  tests
+vdoan002@hammer.cs.ucr.edu $ cat < cat , < cat
+vdoan002@hammer.cs.ucr.edu $ cat < cat < cat < cat < cat
+vdoan002@hammer.cs.ucr.edu $ cat     echo > echo > echo > cat
+echo echo cat
+vdoan002@hammer.cs.ucr.edu $ ls
+bin  cat  LICENSE  Makefile  README.md	src  tests
+vdoan002@hammer.cs.ucr.edu $ ls | grep cat
+ls: cannot access grepls: cannot access grep: No such file or directory
+: No such file or directory
+cat
+vdoan002@hammer.cs.ucr.edu $ ls | grep Li ICENZ SE
+ls: cannot access grep: No such file or directory
+LICENSE
+ls: cannot access grep: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ ls | grep asdf
+ls: cannot access grep: No such file or directory
+ls: cannot access grep: No such file or directory
+ls: ls: cannot access asdfcannot access asdf: No such file or directory
+: No such file or directory
+vdoan002@hammer.cs.ucr.edu $ exit
+~/rshell
+vdoan002@hammer $ exit
+exit
+
+Script done on Thu 20 Nov 2014 11:35:05 PM PST
