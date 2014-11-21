@@ -13,67 +13,73 @@
 
 using namespace std;
 
-//bool exit(char argv)
-//{
-//	string temp = "exit";
-
-//	char* temp2[5];	
-
-//	strcpy(temp2[0], temp.c_str());
-
-//	if(argv == temp2) return true;
-	
-//	return false;
-//}
-void test(vector<string> cmd, vector<int> location, char** argv)
+void redirection(vector<string> cmd, vector<int> location, char** argv)
 {
-/*	if(type == 2){
-		re_file = open(addr, O_APPEND | O_RDWR, S_IREAD | S_IWRITE);
-		type--;
-	}
-	else if(type == 1)
-		re_file = open(addr, O_TRUNC | O_RDWR, S_IREAD | S_IWRITE);
-	else re_file = open(addr, O_CREAT | O_RDWR, S_IREAD | S_IWRITE);
-	old_stdio = dup(type);
-	dup2(re_file, type);
-	close(re_file);
-*/			
 	int pid = fork();
 	
 	if(pid == -1) perror("forking error");
 	else if(pid == 0){
-	for(unsigned i = 0; i < location.size(); ++i)
+	for(unsigned int i = 0; i < location.size(); ++i)
 	{
 		if (cmd.at(location.at(i)) == "<"){
-			int new_stdout = dup(1);
-			close(1);
-			const char* temp = cmd.at(location.at(i)+1).c_str();
-			int fd0 = open(temp, O_RDONLY);
-			dup2(fd0, STDIN_FILENO);
-			close(fd0);
-//			in = 0;
-		}	
-
-		//if(out)(
-		//	
-		//	int fd1 = creat(output, 0644);
-		//	dup2(fd1, STDOUT_FILENO);
-		//	close(fd1);
-		//	out = 0;
+			//error check if there is something actually after!!
+			const char* temp = cmd.at(location.at(i) + 1).c_str();
+			int fd0 = open(temp, O_RDWR | O_CREAT | O_TRUNC);
 			
-		//}
-		
+			if(fd0 == -1)
+			{
+				perror("failed to open");
+				exit(1);
+			}
+			if(close(0)){
+				perror("failed to close");
+				exit(1);
+			}
+			if(dup(fd0)){
+				perror("failed to dup");
+				exit(1);
+			}
+		}
+			
+
+		else if(cmd.at(location.at(i)) == ">"){
+			const char* temp = cmd.at(location.at(i) + 1).c_str();
+			int fd = open(temp, O_RDWR | O_CREAT);
+			close(1);
+			dup(fd);
+		}
+
+		char** argv_temp;
+
+	
 		execvp(argv[0], argv);
 		perror("execvp error");
 		exit(1);
+		}
 	}
-	}	
+		
 	else{
-		waitpid(pid, 0, 0);
-//		free(res);
+		wait(0);
 	}
 	
 }	
+
+void pipe(){
+	int pfds[2];
+	pipe(pfds);
+	if (!fork()) {
+		close(1);       /* close normal stdout */
+    		dup(pfds[1]);   /* make stdout same as pfds[1] */
+    		close(pfds[0]); /* we don't need this */
+    		execlp("ls", "ls", NULL);
+	} 
+	else {
+    		close(0);       /* close normal stdin */
+    		dup(pfds[0]);   /* make stdin same as pfds[0] */
+    		close(pfds[1]); /* we don't need this */
+    		execlp("grep", "SOMETHING", NULL);
+	}
+}
 
 void execute(char x[], vector<string> &parsed)
 {
@@ -90,33 +96,45 @@ void execute(char x[], vector<string> &parsed)
 	if(childpid == 0){
 		vector<int> redirec_location;
 
+
+		int argv_size = 0
 		char** argv = new char*[parsed.size()];
 	//fills argv with correct sizes	
 		for(unsigned int i = 0; i < parsed.size(); ++i)
 		{
 			argv[i] = new char[parsed.at(i).size()];
-	//		argv[i] = NULL;
 		}
 
 		for(unsigned int i = 0; i < parsed.size(); ++i)
 		{
-			strcpy(argv[i], parsed.at(i).c_str());
-			if(parsed.at(i) == ">" || parsed.at(i) == "<")
+			cout << "Parsed.at: " << i << " " << parsed.at(i) << endl;
+			if(parsed.at(i) == ">" || parsed.at(i) == "<"){
 				redirec_location.push_back(i);
+				parsed.erase(parsed.begin() + (i));
+				--i;
+				
+			}
+
+			else{
+			++argv;
+			strcpy(argv[i], parsed.at(i).c_str());
+			}
 		}
 
 		argv[parsed.size()] = NULL;
 		
 		if(redirec_location.size() !=  0)
 		{	
-			test(parsed,redirec_location,argv);
+			redirection(parsed,redirec_location,argv);
 		}
+		else{
 		int r = execvp(argv[0], argv);
 
 		if(r == -1)
 		{
 			perror("Error");
 			exit(1);
+		}
 		}
 		exit(0);
 	} 
@@ -192,7 +210,8 @@ int main()
 
 		for(unsigned i = 0; i < parsed.size(); ++i)
 		{
-			cout << parsed.at(i) << endl;
+			if(parsed.at(i) == "exit") exit(0);
+			cerr << parsed.at(i) << endl; 
 		}
 		
 			execute(commandstr, parsed);
