@@ -200,12 +200,16 @@ void execute(char x[], vector<string> &parsed)
 
 }
 
-//void piping(){}
-	
+void sig_handler(int signum)
+{
+	cout << "Signal Recieved";
+}	
 
 
 int main()
 {
+
+	signal(SIGINT, sig_handler);
 	//Username stuff
 	string UserName;
 	char HostName[1024];
