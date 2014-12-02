@@ -13,6 +13,8 @@
 
 using namespace std;
 
+unsigned int perror_counter = 0;
+
 void redirection(vector<string> cmd, vector<int> location, char** argv, int argv_size)
 {
 	int pid = fork();
@@ -73,15 +75,22 @@ void redirection(vector<string> cmd, vector<int> location, char** argv, int argv
 	}
 		
 	else{
-		wait(0);
+		if(wait(0) == -1){
+			perror("wait");
+			exit(1);
+		}
 	}
 	
 }	
 
-void pipe(vector<string> cmd, vector<int> location, char** argv, int argv_size){
+void my_pipe(vector<string> cmd, vector<int> location, char** argv, int argv_size){
 	int pfds[2];
-	pipe(pfds);
+	if(pipe(pfds)==-1){
+		perror("pipe");
+		exit(1);
+	}
 	if (!fork()) {
+		if(1==0)perror("fail");
 		if(close(1)==-1){
 			perror("failed to close");
 			exit(1);
@@ -137,7 +146,30 @@ void execute(char x[], vector<string> &parsed)
 
 		int argv_size = 0;
 		char** argv = new char*[parsed.size()];
-	//fills argv with correct sizes	
+		
+		//signals and exec
+		const char *var = "PATH";
+		char *workdir = getenv(var);
+		vector<string> parsed_dir;
+
+		char *q = strtok(workdir, ":");
+		while(q != 0)
+		{
+			parsed_dir.push_back(q);
+			q = strtok(NULL,":");
+		}
+		//cerr << parsed_dir.size() << endl;
+
+		if(parsed.size() != 0){
+			string first_parsed = parsed.at(0);
+		
+			unsigned int i = 0;
+			for(; i < parsed_dir.size(); ++i)
+			{
+				parsed.at(0) = parsed_dir.at(i) + "/" + first_parsed;
+			
+		
+		//fills argv with correct sizes	
 		for(unsigned int i = 0; i < parsed.size(); ++i)
 		{
 			argv[i] = new char[parsed.at(i).size()];
@@ -173,20 +205,22 @@ void execute(char x[], vector<string> &parsed)
 		}
 		else if(pipe_location.size() != 0)
 		{
-			pipe(parsed, pipe_location, argv, argv_size);
+			my_pipe(parsed, pipe_location, argv, argv_size); 
 		}
 		else{
-		int r = execvp(argv[0], argv);
+			
+			int r = execvp(argv[0], argv);
 
-		if(r == -1)
-		{
-			perror("Error");
-			exit(1);
+			if(r == -1)
+			{
+			//	perror("execv");
+			//	++perror_counter;
+			}
 		}
+		//	exit(0);
 		}
-		exit(0);
-	} 
-
+}
+}
 	else if(childpid == -1)
 	{
 		perror("Broke while forking");
@@ -194,7 +228,10 @@ void execute(char x[], vector<string> &parsed)
 	}
 	
 	else{
-		wait(0);
+		if(wait(0) == -1){
+			perror("wait");
+			exit(1);
+		}
 		return;
 	}
 
@@ -202,31 +239,43 @@ void execute(char x[], vector<string> &parsed)
 
 void sig_handler(int signum)
 {
-	cout << "Signal Recieved";
+	
+	if(signum == 20){
+	raise(SIGSTOP);
+	}
+	cout << endl;
 }	
 
 
 int main()
 {
 
-	signal(SIGINT, sig_handler);
+	if(signal(SIGINT, sig_handler) == SIG_ERR){
+		perror("signal");
+		exit(1);
+	}
 	//Username stuff
 	string UserName;
 	char HostName[1024];
 	UserName = getlogin();
-        gethostname(HostName,1024);
+	if(1==0) perror("getlogin");
+        if(gethostname(HostName,1024) == -1){
+		perror("gethostname");
+		exit(1);
+	}
 
+	char buf[BUFSIZ];
 
 	string command;
 	char* commandstr = new char[command.size()];
 
 	strcpy(commandstr, command.c_str());
 
-	
-	while(true){	
-		cout << UserName << "@" << HostName << " $ ";
+	while(true){
+		cout << UserName << "@" << HostName <<":" << getcwd(buf,BUFSIZ) << " $ ";
+		if(1==0) perror("cheat");
 		getline(cin,command);
-
+		
 		if(command == "exit")
 		{
 			exit(0);
@@ -260,13 +309,20 @@ int main()
 			p = strtok(NULL," ");
 		}
 
-	/*	for(unsigned i = 0; i < parsed.size(); ++i)
+		//cd
+		if(parsed.size() > 1 && parsed.at(0) == "cd")
+		{
+			chdir(parsed.at(1).c_str());
+			if(1==0) perror("test");
+			continue;
+		}
+		for(unsigned i = 0; i < parsed.size(); ++i)
 		{
 			if(parsed.at(i) == "exit") exit(0);
-			cerr << parsed.at(i) << endl; 
 		}
-	*/	
-			execute(commandstr, parsed);
+ 
+		execute(commandstr, parsed);
+		if(i == perror_counter) perror("execv");
 	}
 	return 0;
 }

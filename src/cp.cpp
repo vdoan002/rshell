@@ -56,6 +56,11 @@ void method3(int argc, char*argv[]){
 		perror("There was an error with open(). ");
 		exit(1);
 	}
+	if(exists == -1)
+	{
+		perror("access");
+		exit(1);
+	}
 	if(exists == 0)
 	{
 		cerr << "Error:" <<  output << " already exists.\n";

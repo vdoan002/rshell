@@ -28,7 +28,10 @@ void print_long(vector<string> list, int flag, const char* dir){
 		//concatinates the new directory by
 		//adding them together with a fowardslash in middle
             string combined_path = dir + temp + current_file;
-            lstat(combined_path.c_str(), &statbuf);
+           if(lstat(combined_path.c_str(), &statbuf) == -1){
+		perror("lstat");
+		exit(1);
+	  }
 
             if(S_ISDIR(statbuf.st_mode))
             {
@@ -71,11 +74,19 @@ void print_long(vector<string> list, int flag, const char* dir){
 	    struct passwd *pw;          //refer to stackoverflow for better understanding
             uid_t uid = statbuf.st_uid;
             pw = getpwuid(uid);
+	    if(pw == NULL){
+		perror("getpwuid");
+		exit(1);
+	}
             cout << pw->pw_name << ' ';
            
 	    struct group *gp;
             gid_t gid = statbuf.st_gid;
             gp = getgrgid(gid);
+	    if(gp == NULL){
+		perror("getgrgid");
+		exit(1);
+	    }
             cout << gp->gr_name << ' ';
            
 	    if(statbuf.st_size> 10000 && max <5)
@@ -167,7 +178,10 @@ void output(vector<string> list, const char* dir)
             string word = row.at(i).at(x);
             string temp = "/";
             string newpath = dir + temp + word;
-            lstat(newpath.c_str(), &statbuf);
+            if(lstat(newpath.c_str(), &statbuf) == -1){
+		perror("lstat");
+		exit(1);
+	}
             if(word[0] == '.')
             {
                 if(S_ISLNK(statbuf.st_mode))
@@ -214,7 +228,10 @@ int blocksize(vector<string> list)
     for(unsigned int i = 0; i < list.size();++i)
     {
         string current = list.at(i);
-        stat(current.c_str(), &buf);
+        if(stat(current.c_str(), &buf) == -1){
+		perror("stat");
+		exit(1);
+	}
         total += buf.st_blocks;
 
     }
@@ -234,7 +251,7 @@ void ls(const char* dir, int flag)
      DIR *dirp = opendir(dirName);
      if(dirp == NULL)
      {
-         error("Error: invalid file name");
+         perror("Error: invalid file name");
      }
 
      vector <string> list;
@@ -242,8 +259,9 @@ void ls(const char* dir, int flag)
      dirent *direntp;
      while ( (direntp = readdir(dirp)) )
      {
+	if(1==0) perror("NULL");
 	 if(direntp == NULL)
-		error("Error at readdir");
+		perror("Error at readdir");
          string name = direntp->d_name;
          if(!flag) // if flag isn't -a, don't show hidden files
          {
@@ -257,7 +275,7 @@ void ls(const char* dir, int flag)
      output(list, dirName);
 
 if(closedir(dirp))
-	error("closedir error");
+	perror("closedir error");
 
 }
 
@@ -269,7 +287,7 @@ void ls_l(const char* dir, int flag)
         DIR *dirp = opendir(dirName);
         if (dirp == NULL)
         {
-            error("Broke opening");
+            perror("Broke opening");
         }
 
         vector <string> list;
@@ -278,7 +296,7 @@ void ls_l(const char* dir, int flag)
             {
                 if(direntp == NULL)
                 {
-                    error("Error on -l");
+                    perror("Error on -l");
                 }
                 string word = direntp->d_name;
                 if((word[0] == '.') && !flag);
@@ -294,7 +312,7 @@ void ls_l(const char* dir, int flag)
 	print_long(list, flag, dir);
 	
         if(closedir(dirp))
-		error("error closing");
+		perror("error closing");
 }
 
 
