@@ -1,0 +1,76 @@
+Script started on Fri 05 Dec 2014 10:39:25 PM PST
+~
+vdoan002@hammer $ cd rshell
+~/rshell
+vdoan002@hammer $ rm -r bin
+/bin/rm: descend into directory `bin'? yes
+/bin/rm: remove regular file `bin/rshell'? yes
+/bin/rm: remove regular file `bin/ls'? yes
+/bin/rm: remove regular file `bin/cp'? yes
+/bin/rm: remove directory `bin'? yes
+~/rshell
+vdoan002@hammer $ make
+if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+g++ -Wall -Werror -ansi -pedantic src/hw0.cpp -o bin/rshell
+g++ -Wall -Werror -ansi -pedantic src/ls.cpp -o bin/ls
+g++ -Wall -Werror -ansi -pedantic src/cp.cpp -o bin/cp
+~/rshell
+vdoan002@hammer $ ./bin/rshell
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ ls
+bin  LICENSE  Makefile	README.md  src	tests
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ pwd
+/home/csmajs/vdoan002/rshell
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ ls  mk  echo hello
+hello
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ echo world
+world
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cat
+hello
+hello
+world
+world
+exi   ^C
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ ls  mkdir layer1
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cd layer1
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1 $ mkdir layer2
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1 $ cd layer2
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1/layer2 $ pwd
+/home/csmajs/vdoan002/rshell/layer1/layer2
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1/layer2 $ cd ..
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1 $ rm layer2
+/bin/rm: cannot remove `layer2': Is a directory
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1 $ ^[[A    rm l -r layer2
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1 $ ls
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell/layer1 $ cd ..
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ rm layer1      -r layer1
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ ls
+bin  LICENSE  Makefile	README.md  src	tests
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cd ../ucr-cs100
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/ucr-cs100 $ ls
+assignments  GRADES.md	lecture  LICENSE  people  README.md  scripts  tutorials
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/ucr-cs100 $ cd ../rshell            pwd
+/home/csmajs/vdoan002/ucr-cs100
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/ucr-cs100 $ cd ../rshell
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ ls
+bin  LICENSE  Makefile	README.md  src	tests
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ echo    ^C
+
+execv: Success
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cat
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cat   cat
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ c exit
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cat
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cat
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ e ls
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ exit
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ cat
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ exit
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ exit
+vdoan002@hammer.cs.ucr.edu:/home/csmajs/vdoan002/rshell $ le s
+~/rshell
+vdoan002@hammer $ exit
+exit
+
+Script done on Fri 05 Dec 2014 10:43:37 PM PST
