@@ -136,7 +136,7 @@ int main(int argc, char*argv[])
 	double eTime;
 	t.start();
 	
-	if(flag == "-t")
+	if(flag[0] == '-')
 	{
 		string input;
 		cout << "Warning, this program will remove the file provided in argv[2]" << endl
